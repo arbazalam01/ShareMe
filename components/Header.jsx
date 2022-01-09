@@ -8,8 +8,10 @@ import {
   PaperAirplaneIcon,
   HomeIcon,
 } from "@heroicons/react/outline";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 function Header() {
+  const { data: session } = useSession();
   return (
     <div className="shadow-sm border-b bg-white sticky top-0 z-50">
       <div className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
@@ -41,10 +43,22 @@ function Header() {
         <div className="flex items-center justify-end space-x-4">
           <HomeIcon className="navBtn" />
           <MenuIcon className="h-6 md:hidden cursor-pointer" />
-          <PaperAirplaneIcon className="navBtn" />
-          <PlusCircleIcon className="navBtn" />
-          <UserGroupIcon className="navBtn" />
-          <HeartIcon className="navBtn" />
+          {session ? (
+            <>
+              <PaperAirplaneIcon className="navBtn" />
+              <PlusCircleIcon className="navBtn" />
+              <UserGroupIcon className="navBtn" />
+              <HeartIcon className="navBtn" />
+              <img
+                onClick={signOut}
+                src={session?.user?.image}
+                alt="profile pic"
+                className="h-9 rounded-full cursor-pointer"
+              />
+            </>
+          ) : (
+            <button onClick={signIn}>SignIn</button>
+          )}
         </div>
       </div>
     </div>
